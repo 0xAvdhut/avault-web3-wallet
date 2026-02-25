@@ -1,29 +1,34 @@
+"use client";
+import CryptoPop from "@/components/CryptoPop";
+import Landing from "@/components/Landing";
 import Navbar from "@/components/Navbar";
-import Image from "next/image";
+import WalletView from "@/components/WalletView";
+import { useState } from "react";
 
 export default function Home() {
+  const [stage, setStage] = useState("landing"); // landing | transition | wallet
+  const [selectedCoin, setSelectedCoin] = useState("");
+
+  const handleCoinSelection = (coin: string) => {
+    setSelectedCoin(coin);
+    setStage("transition");
+
+    // Switch to the actual wallet view after animation finishes
+    setTimeout(() => {
+      setStage("wallet");
+    }, 1600);
+  };
   return (
-    <main className="flex flex-col mx-auto gap-4">
-
+    //TODO: When a user clicks on Solana or Ethereum, it should redirect to the respective blockchain page with loading page should animate the logo of that crypto flying by from right to left 
+    <main className="max-w-7xl mx-auto flex flex-col gap-4 p-4 min-h-[92vh]">
       <Navbar />
-      <div className="flex flex-col items-center justify-between">
-        <div className="flex flex-col items-center justify-between text-align-left">
+      {stage === "landing" && <Landing onSelect={handleCoinSelection} />}
 
-          <h1 className="text-3xl font-extrabold font-sans">
-            aVAULT is a Web3 Based Wallet for Solana And Ethereum</h1>
-          <p className="text-xl font-medium font-sans">
-            aVAULT is a Web3 Based Wallet for Solana And Ethereum
-          </p>
-          <p className="text-xl font-light font-sans">
-            Choose a Blockchain to get started!
-          </p>
-        </div>
+      {stage === "transition" && <CryptoPop coin={selectedCoin} />}
 
-        <div className="flex items-center space-x-2">
-          <button className="bg-white text-4xl font-bold text-black px-40 py-20 rounded-lg cursor-pointer">Solana</button>
-          <button className="bg-white text-4xl font-bold text-black px-40 py-20 rounded-lg cursor-pointer">Ethereum</button>
-        </div>
-      </div>
+      {stage === "wallet" && (
+        <WalletView coin={selectedCoin} onBack={() => setStage("landing")} />
+      )}
     </main>
   );
 }
