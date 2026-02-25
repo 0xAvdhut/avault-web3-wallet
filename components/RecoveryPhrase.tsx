@@ -9,6 +9,7 @@ export default function RecoveryPhrase() {
                         {index + 1}
                     </div>
                 ))}
+
             </div>
         </div>
     )
