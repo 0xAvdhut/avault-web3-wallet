@@ -3,14 +3,20 @@ import CryptoPop from "@/components/CryptoPop";
 import Landing from "@/components/Landing";
 import Navbar from "@/components/Navbar";
 import WalletView from "@/components/WalletView";
-import { useState } from "react";
+import { generateWallet } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [stage, setStage] = useState("landing"); // landing | transition | wallet
   const [selectedCoin, setSelectedCoin] = useState("");
-
+  useEffect(() => {
+    if (stage === "transition") {
+      generateWallet();
+    }
+  }, [stage]);
   const handleCoinSelection = (coin: string) => {
     setSelectedCoin(coin);
+    localStorage.setItem("coin", coin);
     setStage("transition");
 
     // Switch to the actual wallet view after animation finishes
